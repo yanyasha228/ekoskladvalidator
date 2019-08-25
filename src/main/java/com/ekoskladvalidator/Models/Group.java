@@ -1,24 +1,25 @@
-package com.ekoskladvalidator.Models.HelpModels;
+package com.ekoskladvalidator.Models;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @Data
-@XmlRootElement(name = "category")
-@XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "groups")
+public class Group implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column
-    private String caption;
+    private String name;
+
 }

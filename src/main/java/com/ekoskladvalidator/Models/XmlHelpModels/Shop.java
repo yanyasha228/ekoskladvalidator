@@ -2,7 +2,6 @@ package com.ekoskladvalidator.Models.XmlHelpModels;
 
 
 
-import com.ekoskladvalidator.Models.HelpModels.Item;
 import lombok.Data;
 
 import javax.xml.bind.annotation.*;
