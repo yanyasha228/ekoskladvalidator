@@ -28,6 +28,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAll() {
+        return productDao.findAll();
+    }
+
+    @Override
     public Optional<Product> findById(int id) {
         return productDao.findById(id);
     }

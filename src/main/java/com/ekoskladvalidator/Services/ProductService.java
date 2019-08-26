@@ -16,6 +16,8 @@ public interface ProductService {
 
     List<Product> save(List<Product> productList);
 
+    List<Product> findAll();
+
     Optional<Product> findById(int id);
 
     Optional<Product> findProductByName(String name);
@@ -34,8 +36,8 @@ public interface ProductService {
                                                     Pageable pageable);
 
     Page<Product> findProductsByGroupAndDataForValidatingExistWithPagination(Group group,
-                                                               boolean dataForValidatingExist,
-                                                               Pageable pageable);
+                                                                             boolean dataForValidatingExist,
+                                                                             Pageable pageable);
 
     Page<Product> findProductsByNameIgnoreCaseContainingAndGroupWithPagination(String nonFullName,
                                                                                Group group,

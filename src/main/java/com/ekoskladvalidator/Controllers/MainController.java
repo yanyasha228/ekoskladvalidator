@@ -1,7 +1,7 @@
 package com.ekoskladvalidator.Controllers;
 
 
-import com.ekoskladvalidator.ParseUtils.TestParse;
+import com.ekoskladvalidator.ParseUtils.CssQueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class MainController {
 
     @Autowired
-    private TestParse testParse;
+    private CssQueryParser testParse;
 
     @RequestMapping
     public String mainPage(Model model) {

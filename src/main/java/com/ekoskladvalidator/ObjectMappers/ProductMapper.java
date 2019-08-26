@@ -1,6 +1,5 @@
-package com.ekoskladvalidator.HelpUtils;
+package com.ekoskladvalidator.ObjectMappers;
 
-import com.ekoskladvalidator.Models.DTO.ProductDto;
 import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.Services.ProductService;
 import org.modelmapper.ModelMapper;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class ProductMapper {
@@ -20,9 +18,8 @@ public class ProductMapper {
     private ProductService productService;
 
 
-    public Product toEntity(ProductDto productDto) {
+    public Product toEntity(com.ekoskladvalidator.Models.DTO.ProductDto productDto) {
         if(productDto==null) return null;
-
         Product product = mapper.map(productDto, Product.class);
         Product oldProduct =productService.findById(productDto.getId()).orElse(null);
         if(oldProduct!=null){
@@ -37,8 +34,8 @@ public class ProductMapper {
     }
 
 
-    public ProductDto toDto(Product product) {
-        return Objects.isNull(product) ? null : mapper.map(product, ProductDto.class);
+    public com.ekoskladvalidator.Models.DTO.ProductDto toDto(Product product) {
+        return Objects.isNull(product) ? null : mapper.map(product, com.ekoskladvalidator.Models.DTO.ProductDto.class);
     }
 
 

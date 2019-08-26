@@ -56,9 +56,11 @@
         <div class="control-group" id="fields">
             <div class="controls">
                 <form th:action="@{/products/{id}/edit/submit(id=${product.getId()})}" th:object="${product}" method="post" role="form" autocomplete="off">
+
                     <input hidden
                            type="text"
                     th:field="*{id}">
+
 
                     <div class="form-row">
                         <div class="form-group col-md-6">

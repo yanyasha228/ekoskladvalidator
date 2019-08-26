@@ -10,10 +10,12 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ProductsRestList implements Serializable {
+public class ProductsListResponse implements Serializable {
 
     private List<ProductDto> products = new ArrayList<ProductDto>();
 
     private int group_id;
+
+    private ErrorsResponse errors;
 
 }

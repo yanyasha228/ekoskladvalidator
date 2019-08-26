@@ -1,6 +1,7 @@
 package com.ekoskladvalidator;
 
 import com.ekoskladvalidator.Models.Product;
+import com.ekoskladvalidator.RestServices.ProductRestService;
 import com.ekoskladvalidator.Services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.ekoskladvalidator")
 public class EkoskladvalidatorApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(EkoskladvalidatorApplication.class);
@@ -24,9 +23,28 @@ public class EkoskladvalidatorApplication {
 	}
 
 	@Bean("CRunner")
-	public CommandLineRunner testDataProd(ProductService productService) {
+	public CommandLineRunner testDataProd(ProductService productService ,
+										  ProductRestService productRestService) {
 		return (args) -> {
 
+			productService.save(productRestService.getAll());
+
+            List<Product> productList = productService.findAll();
+
+            for (Product pr : productList){
+            	log.info(pr.getName());
+				log.info(String.valueOf(pr.getId()));
+				log.info(pr.getCurrency());
+				log.info(pr.getStatus().toString());
+				log.info(pr.getMain_image());
+				log.info(pr.getLastValidationDate().toString());
+				log.info(pr.getCssQueryForValidating());
+				log.info(pr.getUrlForValidating());
+				log.info(String.valueOf(pr.getGroup().getId()));
+				log.info(pr.getGroup().getName());
+
+
+			}
 //            List<Client> clientsFDB = clientService.findAll();
 //
 //            // fetch all customers
