@@ -113,18 +113,7 @@ $(document).on('keyup', '.product-dropdown-search-input', function (e) {
     var searchField = $(this).val();
 
     if (searchField.length > 1) {
-        // $.getJSON(location.origin + "/restApi/products/?nonFullProductName=" + searchField, function (data) {
-        //     $.each(data, function (key, value) {
-        //
-        //         searchList.append('<li class="list-group-item product-search-res-item" data-prodid = "' + value.id + '"><div class="row"' +
-        //             '><div class="col-4"><img src="' + value.images[0].url + '" height="60" width="80" class="img-thumbnail"></div>' +
-        //             '<div class="col-8"> <p style="overflow: hidden; text-overflow: ellipsis;">' + value.name + '</p> </div>' +
-        //             '</div></li>');
-        //
-        //
-        //     });
-        //
-        // });
+
 
         $.getJSON(location.origin + "/rest/products/?nonFullProductName=" + searchField, function (data) {
             $.each(data, function (key, value) {

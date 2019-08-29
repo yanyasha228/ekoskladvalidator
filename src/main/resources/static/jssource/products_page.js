@@ -25,11 +25,6 @@ $(function () {
             location.reload();
         });
 
-        // $.post(location.origin + '/restApi/products/delete?id=' + productId).done(function (data) {
-        //     currentItemToDelete.remove();
-        //     currentItemToDelete = null;
-        //     $('#deleteProductModal').modal('hide');
-        // })
     });
 
     $(document).on('click', '.product-search-res-item', function (e) {
