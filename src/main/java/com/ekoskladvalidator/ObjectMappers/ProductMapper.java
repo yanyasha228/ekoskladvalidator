@@ -1,5 +1,6 @@
 package com.ekoskladvalidator.ObjectMappers;
 
+import com.ekoskladvalidator.Models.DTO.ProductDto;
 import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.Services.ProductService;
 import org.modelmapper.ModelMapper;
@@ -18,7 +19,7 @@ public class ProductMapper {
     private ProductService productService;
 
 
-    public Product toEntity(com.ekoskladvalidator.Models.DTO.ProductDto productDto) {
+    public Product toEntity(ProductDto productDto) {
         if(productDto==null) return null;
         Product product = mapper.map(productDto, Product.class);
         Product oldProduct =productService.findById(productDto.getId()).orElse(null);
@@ -26,7 +27,9 @@ public class ProductMapper {
             product.setLastValidationDate(oldProduct.getLastValidationDate());
             product.setUrlForValidating(oldProduct.getUrlForValidating());
             product.setCssQueryForValidating(oldProduct.getCssQueryForValidating());
+            product.setValidationStatus(oldProduct.isValidationStatus());
             product.setDataForValidatingExist(oldProduct.isDataForValidatingExist());
+            product.setValidationStatus(oldProduct.isValidationStatus());
         }
 
         return product;

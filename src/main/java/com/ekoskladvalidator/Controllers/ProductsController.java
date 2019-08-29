@@ -29,32 +29,23 @@ public class ProductsController {
     @Autowired
     private GroupService groupService;
 
-
-//    @Autowired
-//    private ProductListPageHelper productListPageHelper;
-
-
     @GetMapping
     public String productsList(Model model,
                                @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, size = 5) Pageable pageable,
-                               @RequestParam Optional<Boolean> dataForValidatingExist,
+                               @RequestParam Optional<Boolean> validationStatus,
                                @RequestParam Optional<Integer> groupId,
                                @RequestParam Optional<String> nonFullProductName) {
 
 
-        /**
-         * Delegate showing product list logic into the {@link ProductListPageHelper}
-         */
-//        productListPageHelper.validatePageShowingState(productsPageNumber, productsPageSize, productsStockSorting, productsCategorySortingId , productNameSearchInput);
+
         Page<Product> productsPage = productService.findProductsWithPagination(nonFullProductName.orElse(""),
                 groupService.findById(groupId.orElse(0)).orElse(null),
-                dataForValidatingExist.orElse(null),
+                validationStatus.orElse(null),
                 pageable);
 
-//        Double eurCurrency = adminSettings.getEurCurrency();
-//        Double usdCurrency = adminSettings.getUsdCurrency();
 
-        model.addAttribute("dataForValidatingExist", dataForValidatingExist.orElse(null));
+
+        model.addAttribute("validationStatus", validationStatus.orElse(null));
 
         model.addAttribute("groupId", groupId.orElse(0));
 
@@ -62,11 +53,7 @@ public class ProductsController {
 
         model.addAttribute("productsPage",
                 productsPage);
-//            model.addAttribute("productsList",
-//                    productService.findProductsByProductStockWithPagination(productListPageHelper.getProductsStockSorting(), PageRequest.of(productListPageHelper.getCurrentPageNumber(),
-//                            productListPageHelper.getPageSize(),
-//                            Sort.Direction.ASC,
-//                            "id")));
+
 
         model.addAttribute("groups", groupService.findAll());
 

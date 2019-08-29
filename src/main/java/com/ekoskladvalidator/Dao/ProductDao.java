@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface ProductDao extends JpaRepository<Product, Integer> {
 
+    Product save(Product product);
+
     Optional<Product> findById(int id);
 
     Optional<Product> findProductByName(String name);
@@ -25,24 +27,24 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
     Page<Product> findProductsByGroup(Group group,
                                       Pageable pageable);
 
-    Page<Product> findProductsByDataForValidatingExist(boolean dataForValidatingExist,
+    Page<Product> findProductsByValidationStatus(boolean validationStatus,
                                                        Pageable pageable);
 
-    Page<Product> findProductsByGroupAndDataForValidatingExist(Group group,
-                                                               boolean dataForValidatingExist,
+    Page<Product> findProductsByGroupAndValidationStatus(Group group,
+                                                               boolean validationStatus,
                                                                Pageable pageable);
 
     Page<Product> findProductsByNameIgnoreCaseContainingAndGroup(String nonFullName,
                                                                  Group group,
                                                                  Pageable pageable);
 
-    Page<Product> findProductsByNameIgnoreCaseContainingAndDataForValidatingExist(String nonFullName,
-                                                                                  boolean dataForValidatingExist,
+    Page<Product> findProductsByNameIgnoreCaseContainingAndValidationStatus(String nonFullName,
+                                                                                  boolean validationStatus,
                                                                                   Pageable pageable);
 
-    Page<Product> findProductsByNameIgnoreCaseContainingAndGroupAndDataForValidatingExist(String nonFullName,
+    Page<Product> findProductsByNameIgnoreCaseContainingAndGroupAndValidationStatus(String nonFullName,
                                                                                           Group group,
-                                                                                          boolean dataForValidatingExist,
+                                                                                          boolean validationStatus,
                                                                                           Pageable pageable);
 
 }

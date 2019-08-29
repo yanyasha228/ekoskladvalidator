@@ -2,6 +2,7 @@ package com.ekoskladvalidator.Controllers;
 
 
 import com.ekoskladvalidator.ParseUtils.CssQueryParser;
+import com.ekoskladvalidator.Validators.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,32 +18,30 @@ import java.io.IOException;
 public class MainController {
 
     @Autowired
-    private CssQueryParser testParse;
+    private ProductValidator productValidator;
 
     @RequestMapping
     public String mainPage(Model model) {
 
-        return "settingsParse";
+        return "redirect:/products";
 
     }
 
+    @GetMapping("sync")
+    public String sync(Model model) {
 
-    @RequestMapping(value = "/login")
+        productValidator.validateProducts();
+
+        return "redirect:/products";
+
+    }
+
+    @GetMapping("login")
     public String loginPage() {
         return "login";
     }
 
-    @GetMapping("parse")
-    public String parseSubmit(){
-        return "settingsParse";
-    }
 
-    @PostMapping("submit")
-    public String parseSubmit(@RequestParam String syncUrl) throws IOException {
-//        testParse.parseTestEx(syncUrl);
 
-        return testParse.getOneEllem("#product-price-2490 > span");
 
-        //        return "redirect:../";
-    }
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.MalformedInputException;
 
 @Component
 public class CssQueryParser {
@@ -20,12 +21,18 @@ public class CssQueryParser {
     }
 
     public String getText(String url, String cssQuery) throws IOException {
-
-        Document doc = Jsoup.connect(url).timeout(30000).ignoreHttpErrors(true).get();
+        Document doc;
+        try {
+            doc = Jsoup.connect(url).timeout(30000).ignoreHttpErrors(true).get();
+        } catch (MalformedInputException e) {
+            return "null";
+        }
         Elements ells = doc.select(cssQuery);
         Element ell = ells.first();
 
-        return ell.text();
+        if (ell != null) return ell.text();
+
+        return "null";
     }
 
 }

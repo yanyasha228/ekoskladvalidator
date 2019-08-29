@@ -1,7 +1,7 @@
 package com.ekoskladvalidator.Models.HelpRestModels;
 
-import com.ekoskladvalidator.Models.DTO.GroupDto;
 import com.ekoskladvalidator.Models.Group;
+import com.ekoskladvalidator.Models.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,23 +11,24 @@ import java.util.Objects;
 
 @Data
 @NoArgsConstructor
-public class GroupsListResponse {
+public class SynchronizeDto {
 
-    private List<GroupDto> groups = new ArrayList<GroupDto>();
+    private List<Product> products = new ArrayList<>();
 
-    private ErrorsResponse errors;
+    private List<Group> groups = new ArrayList<>();
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GroupsListResponse that = (GroupsListResponse) o;
-        return Objects.equals(groups, that.groups) &&
-                Objects.equals(errors, that.errors);
+        SynchronizeDto that = (SynchronizeDto) o;
+        return Objects.equals(products, that.products) &&
+                Objects.equals(groups, that.groups);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groups, errors);
+        return Objects.hash(products, groups);
     }
 }

@@ -1,6 +1,7 @@
 package com.ekoskladvalidator.Services;
 
 
+import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
 import com.ekoskladvalidator.Models.Group;
 import com.ekoskladvalidator.Models.Product;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Product save(Product product);
+    Product save(Product product )throws ImpossibleEntitySaveUpdateException;
 
     List<Product> save(List<Product> productList);
 
@@ -22,6 +23,8 @@ public interface ProductService {
 
     Optional<Product> findProductByName(String name);
 
+    List<Product> findProductByNonFullProductNameRegardlessOfTheWordsOrder(String nonFullProductName);
+
     List<Product> findProductsByNameIgnoreCaseContaining(String nonFullName);
 
     Page<Product> findAllWithPagination(Pageable pageable);
@@ -29,32 +32,32 @@ public interface ProductService {
     Page<Product> findProductsByNameIgnoreCaseContainingWithPagination(String nonFullName,
                                                                        Pageable pageable);
 
-    Page<Product> findProductsByDataForValidatingExistWithPagination(boolean dataForValidatingExist,
+    Page<Product> findProductsByValidationStatusWithPagination(boolean validationStatus,
                                                                      Pageable pageable);
 
     Page<Product> findProductsByGroupWithPagination(Group group,
                                                     Pageable pageable);
 
-    Page<Product> findProductsByGroupAndDataForValidatingExistWithPagination(Group group,
-                                                                             boolean dataForValidatingExist,
+    Page<Product> findProductsByGroupAndValidationStatusWithPagination(Group group,
+                                                                             boolean validationStatus,
                                                                              Pageable pageable);
 
     Page<Product> findProductsByNameIgnoreCaseContainingAndGroupWithPagination(String nonFullName,
                                                                                Group group,
                                                                                Pageable pageable);
 
-    Page<Product> findProductsByNameIgnoreCaseContainingAndDataForValidatingExistWithPagination(String nonFullName,
-                                                                                                boolean dataForValidatingExist,
+    Page<Product> findProductsByNameIgnoreCaseContainingAndValidationStatusWithPagination(String nonFullName,
+                                                                                                boolean validationStatus,
                                                                                                 Pageable pageable);
 
-    Page<Product> findProductsByNameIgnoreCaseContainingAndGroupAndDataForValidatingExistWithPagination(String nonFullName,
+    Page<Product> findProductsByNameIgnoreCaseContainingAndGroupAndValidationStatusWithPagination(String nonFullName,
                                                                                                         Group group,
-                                                                                                        boolean dataForValidatingExist,
+                                                                                                        boolean validationStatus,
                                                                                                         Pageable pageable);
 
     public Page<Product> findProductsWithPagination(String nonFullProductName,
                                                     Group group,
-                                                    Boolean dataForValidatingExist,
+                                                    Boolean validationStatus,
                                                     Pageable pageable);
 
 

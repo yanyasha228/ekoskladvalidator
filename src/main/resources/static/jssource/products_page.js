@@ -1,39 +1,30 @@
 $(function () {
 
-    var currentItemToDelete;
-
-    $(document).on('show.bs.modal', '#deleteProductModal', function (event) {
-        var referrerButton = $(event.relatedTarget); // Button that triggered the modal
-
-        currentItemToDelete = referrerButton.closest('tr');
-        var productId = referrerButton.data('product-id');
-        var productName = referrerButton.data('product-name');// Extract productId from data-* attributes
-
-        // var deleteProductLink = location.origin + "/restApi/products/delete?id=" + productId;;
-
-        var modal = $(this);
-        modal.find('#deleteProductNameModalLabel').text(productName);
-        modal.find('#deleteProductLink').attr('data-prod-id', productId)
+    $(document).on('show.bs.modal', '#addGroupModal', function (event) {
     });
 
-    $(document).on('hide.bs.modal', '#deleteProductModal', function (event) {
-        currentItemToDelete = null;
-    });
 
-    $(document).on('click', '#deleteProductLink', function (ev) {
 
-        var productId = $(this).data('prod-id');
+    $(document).on('click', '#addGroupLink', function (ev) {
+
+        var groupId = $('#inputGroupId').val();
+        var dFs= {
+            id : groupId
+        };
 
         $.ajax({
-            url: location.origin + '/restApi/products/' + productId,
-            type: 'DELETE',
-            success : function (result) {
-                currentItemToDelete.remove();
-                currentItemToDelete = null;
-                $('#deleteProductModal').modal('hide');
-                location.reload();
-            }
+            url: location.origin + "/rest/groups/add",
+            dataType: 'json',
+            type: 'POST',
+            data: dFs
+        }).done(function (d) {
+            $('#addGroupModal').modal('hide');
+            location.reload();
+        }).fail(function () {
+            $('#addGroupModal').modal('hide');
+            location.reload();
         });
+
         // $.post(location.origin + '/restApi/products/delete?id=' + productId).done(function (data) {
         //     currentItemToDelete.remove();
         //     currentItemToDelete = null;
@@ -53,6 +44,64 @@ $(function () {
         }
     });
 
+    $(document).on('click', '#orderLineItem', function (e) {
+
+        var prodEditLink = location.origin +"/products/" + $(this).data('prodid') + "/edit";
+        window.open(prodEditLink, "_top");
+
+    });
+
+
+    $(document).on('keydown', '#productNameSearchInput', function (e) {
+
+        var searchList = $(this).siblings("#searchProductsList");
+
+        var searchField = $(this).val();
+
+        searchField = encodeRequestReservedSymbols(searchField);
+
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            var activeItem = searchList.children('.active:first');
+            if(activeItem.length <= 0) {
+
+                $('#searchInputForm').submit();
+                return;
+            } else {
+                var prodEditLink = location.origin + "/products/" + activeItem.data('prodid') + "/edit";
+                window.open(prodEditLink, "_top");
+                return;
+            }
+
+        }
+
+        if (e.keyCode == 40 || e.keyCode == 38) {
+            arrowActiveItemHandling(e, searchList, $(this));
+
+        } else {
+            searchList.html('');
+//////Validirovat searchSend !!!!!!!!!!!!!!!!
+            if (searchField.length > 1) {
+                $.getJSON(location.origin + "/rest/products/?nonFullProductName=" + searchField, function (data) {
+                    $.each(data, function (key, value) {
+                        var prodStatus = "text-danger";
+                        if(value.validationStatus === true) prodStatus="test-success";
+
+                        searchList.append('<li class="list-group-item product-search-editor-res-item" tabindex ="' + key + '" id="orderLineItem" data-prodid = "' + value.id + '"><div class="row"' +
+                            '><div class="col-4"><img src="' + value.main_image + '" height="60" width="80" class="img-thumbnail"></div>' +
+                            '<div class="col-1"><span class="status ' + prodStatus +
+                            '">&bull;</span></div>'+
+                            '<div class="col-7"> <p id="prodNamePar" style="overflow: hidden; text-overflow: ellipsis;">' + value.name + '</p> </div>' +
+                            '</div></li>');
+
+
+                    });
+
+                });
+            }
+        }
+
+    });
 
 });
 

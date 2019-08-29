@@ -10,6 +10,10 @@ body {
 
 }
 
+#fields{
+    width: auto;
+}
+
 .orderLinesFooter {
     padding-top: 20px;
 }
@@ -40,7 +44,7 @@ body {
 
 .carousel-item img{
     width: auto;
-    height: auto;
+    height: 500px;
 }
 
 .order-edit-group {

@@ -1,5 +1,6 @@
 package com.ekoskladvalidator.RestServices;
 
+import com.ekoskladvalidator.Dao.GroupDao;
 import com.ekoskladvalidator.Models.DTO.GroupDto;
 import com.ekoskladvalidator.Models.DTO.ProductDto;
 import com.ekoskladvalidator.Models.Group;
@@ -7,6 +8,7 @@ import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.ObjectMappers.ProductMapper;
 import com.ekoskladvalidator.RestDao.GroupRestDao;
 import com.ekoskladvalidator.RestDao.ProductRestDao;
+import com.ekoskladvalidator.Services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class ProductRestServiceImpl implements ProductRestService {
     private GroupRestDao groupRestDao;
 
     @Autowired
+    private GroupService groupService;
+
+    @Autowired
     private ProductRestDao productRestDao;
 
     @Autowired
@@ -37,8 +42,8 @@ public class ProductRestServiceImpl implements ProductRestService {
     public List<Product> getAll() {
 
         List<Product> productList = new ArrayList<>();
-        for ( GroupDto gr: groupRestDao
-                .getAllGroups()) {
+
+        for ( Group gr: groupService.findAll()) {
             productList.addAll(productRestDao.getProductsByGroupId(gr.getId()).stream()
                     .map(productDto -> productMapper.toEntity(productDto)).collect(Collectors.toList()));
         }

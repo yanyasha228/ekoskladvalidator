@@ -1,12 +1,16 @@
 package com.ekoskladvalidator.Controllers;
 
+import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
 import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.Services.ProductService;
+import com.ekoskladvalidator.Validators.ProductValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/products/{id}/edit")
@@ -16,6 +20,9 @@ public class ProductsEditController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductValidator productValidator;
 
     @GetMapping
     public String editProduct(Model model, @PathVariable Integer id) {
@@ -28,18 +35,28 @@ public class ProductsEditController {
     }
 
     @PostMapping("submit")
-    public String editProductSubmit(Model model , @ModelAttribute(name="product") Product product){
+    public String editProductSubmit(Model model, @ModelAttribute(name = "product") Product product) {
 
-        Product appropriateProductFromDB = productService.findById(product.getId()).get();
+        Optional<Product> appropriateProductFromDBOpt = productService.findById(product.getId());
 
-        appropriateProductFromDB.setUrlForValidating(product.getUrlForValidating());
-        appropriateProductFromDB.setCssQueryForValidating(product.getCssQueryForValidating());
+        Product appropriateProductFromDB = appropriateProductFromDBOpt.orElse(null);
+
+        if (appropriateProductFromDBOpt.isPresent()) {
+            appropriateProductFromDB.setUrlForValidating(product.getUrlForValidating());
+            appropriateProductFromDB.setCssQueryForValidating(product.getCssQueryForValidating());
+        }
+
+        try {
 
 
-        return "products";
+            productValidator.validateOne(productService.save(appropriateProductFromDB));
+        } catch (ImpossibleEntitySaveUpdateException e) {
+            logger.warn(e);
+        }
+
+        return "redirect:/products";
 
     }
-
 
 
 }

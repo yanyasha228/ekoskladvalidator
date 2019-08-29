@@ -6,10 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Data
@@ -37,11 +39,12 @@ public class Product implements Serializable {
     private String main_image;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
     @Column(name = "last_validation_date")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate lastValidationDate;
+    @DateTimeFormat(pattern = "dd-M-yyyy hh:mm")
+    private LocalDateTime lastValidationDate;
 
     @Column(name = "url_for_validating")
     private String urlForValidating;
@@ -49,23 +52,24 @@ public class Product implements Serializable {
     @Column(name = "css_query_for_validating")
     private String cssQueryForValidating;
 
+    @Column(name = "validation_status")
+    @Type(type = "true_false")
+    private boolean validationStatus;
+
     @Column(name = "url_for_validating_exist")
     @Type(type = "true_false")
     private boolean dataForValidatingExist;
 
-
     @PreUpdate
     @PrePersist
     protected void prePersistUpdate() {
-
-        updateLastValidationDate();
 
         modifyDataForValidationFlag();
 
     }
 
 
-    protected void modifyDataForValidationFlag() {
+    private void modifyDataForValidationFlag() {
 
         if (urlForValidating != null && cssQueryForValidating != null) {
             if (urlForValidating.replaceAll(" ", "").equalsIgnoreCase("") ||
@@ -77,8 +81,8 @@ public class Product implements Serializable {
 
     }
 
-    private void updateLastValidationDate(){
-        lastValidationDate = LocalDate.now();
+    public void updateLastValidationDate(){
+        lastValidationDate = LocalDateTime.now();
     }
 
     @Override
