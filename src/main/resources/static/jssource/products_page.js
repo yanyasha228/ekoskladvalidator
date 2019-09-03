@@ -27,6 +27,33 @@ $(function () {
 
     });
 
+    $(document).on('show.bs.modal', '#addProductModal', function (event) {
+    });
+
+
+
+    $(document).on('click', '#addProductLink', function (ev) {
+
+        var productId = $('#inputProductId').val();
+        var dFs= {
+            id : productId
+        };
+
+        $.ajax({
+            url: location.origin + "/rest/products/add",
+            dataType: 'json',
+            type: 'POST',
+            data: dFs
+        }).done(function (d) {
+            $('#addProductModal').modal('hide');
+            location.reload();
+        }).fail(function () {
+            $('#addProductModal').modal('hide');
+            location.reload();
+        });
+
+    });
+
     $(document).on('click', '.product-search-res-item', function (e) {
         var prodId = $(this).data('prodid');
         window.location = (location.origin + "/admin/products/editProduct?id=" + prodId);

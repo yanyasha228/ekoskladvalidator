@@ -8,11 +8,12 @@ import com.ekoskladvalidator.Services.ProductService;
 import com.ekoskladvalidator.SyncUtils.DbRestSynchronizer;
 import com.ekoskladvalidator.Validators.ValidatorUtils.ProductValidatorUtils;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,11 +39,31 @@ public class ProductValidator {
     private ProductValidatorUtils priceValidatorUtils;
 
 
-    @Scheduled(fixedDelay = 12000000)
-    public List<Product> validateProducts(){
+    @Scheduled(fixedDelay = 10000)
+    public void validateProducts(){
 
+        List<Product> syncProductList = dbRestSynchronizer.synchronizeDbProductsWithRestApiModels();
 
-        List<Product> syncProductList = dbRestSynchronizer.synchronizeDbWithRestApiModels().getProducts();
+        List<Product> productListForExSave = productService.findAll().stream().
+                filter(product -> {
+
+                    boolean ndToAdd = true;
+
+                    for (Product syncProduct : syncProductList) {
+                        if (syncProduct.getId() == product.getId()) {
+                            ndToAdd = false;
+                            break;
+                        }
+                    }
+
+                    if(!product.isDataForValidatingExist()) ndToAdd = true;
+
+                    return ndToAdd;
+                }).
+                collect(Collectors.toList()).stream().map(product -> {
+            product.setValidationStatus(false);
+            return product;
+        }).collect(Collectors.toList());
 
         List<Product> productListForValidation = productService.findAll().stream().
                 filter(Product::isDataForValidatingExist).
@@ -52,7 +73,10 @@ public class ProductValidator {
                     }
                     return false;
                 }).
-                collect(Collectors.toList());
+                collect(Collectors.toList()).stream().map(product -> {
+            product.setValidationStatus(false);
+            return product;
+        }).collect(Collectors.toList());
 
         for (Product prFV : productListForValidation) {
 
@@ -67,18 +91,23 @@ public class ProductValidator {
 
         }
 
-        return productRestService.postProducts(productService.save(productListForValidation));
+
+        productService.save(productListForExSave);
+
+
+        productRestService.postProducts(productService.save(productListForValidation));
 
 
     }
 
-    public Optional<Product> validateOne(Product product) throws ImpossibleEntitySaveUpdateException {
+    public List<Product> validateOne(Product product) throws ImpossibleEntitySaveUpdateException {
 
         Product syncedProduct;
+
         try {
             syncedProduct = dbRestSynchronizer.synchronizeOneDbProductWithRestApiModel(product);
         }catch (ImpossibleEntitySaveUpdateException e){
-            return Optional.empty();
+            return Collections.emptyList();
         }
 
         if(product.isDataForValidatingExist()){
@@ -91,11 +120,14 @@ public class ProductValidator {
                 syncedProduct.updateLastValidationDate();
             }else syncedProduct.setValidationStatus(false);
 
-        }
-        Product product1 = productService.save(syncedProduct);
+        }else syncedProduct.setValidationStatus(false);
 
-        int i = 0;
-        return Optional.of(productService.save(syncedProduct));
+        List<Product> prodListForVal = new ArrayList<>();
+
+        prodListForVal.add(syncedProduct);
+
+
+        return productRestService.postProducts(productService.save(prodListForVal));
 
     }
 

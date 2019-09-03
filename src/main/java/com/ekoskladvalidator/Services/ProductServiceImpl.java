@@ -39,10 +39,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> save(List<Product> productList) {
 
-        int exCounter = 0;
-
-        List<ImpossibleEntitySaveUpdateException> exceptions = new ArrayList<>();
-
         List<Product> productListForSave = productList.stream().filter(product -> {
             if (product.getId() <= 0) {
                 log.warn("Attempt to update entity without ID!!!");

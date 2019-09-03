@@ -14,5 +14,6 @@ public class EkoskladvalidatorApplication {
         SpringApplication.run(EkoskladvalidatorApplication.class, args);
     }
 
+
 }
 

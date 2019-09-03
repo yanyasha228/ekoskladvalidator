@@ -1,21 +1,20 @@
 package com.ekoskladvalidator.SyncUtils;
 
 import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
-import com.ekoskladvalidator.Models.Group;
-import com.ekoskladvalidator.Models.HelpRestModels.SynchronizeDto;
 import com.ekoskladvalidator.Models.Product;
-import com.ekoskladvalidator.RestServices.GroupRestService;
 import com.ekoskladvalidator.RestServices.ProductRestService;
-import com.ekoskladvalidator.Services.GroupService;
 import com.ekoskladvalidator.Services.ProductService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class DbRestSynchronizer {
+
+    private static final Logger logger = Logger.getLogger(DbRestSynchronizer.class);
 
     @Autowired
     private ProductService productService;
@@ -23,47 +22,34 @@ public class DbRestSynchronizer {
     @Autowired
     private ProductRestService productRestService;
 
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
-    private GroupRestService groupRestService;
 
 
-    public SynchronizeDto synchronizeDbWithRestApiModels() {
+    public List<Product> synchronizeDbProductsWithRestApiModels() {
 
-        SynchronizeDto synchronizeDto = new SynchronizeDto();
+        try {
 
-        synchronizeDto.setGroups(synchronizeGroups());
+            return synchronizeProducts();
+        } catch (InterruptedException e) {
+            logger.error(e);
+        }
 
-        synchronizeDto.setProducts(synchronizeProducts());
-
-
-        return synchronizeDto;
+        return Collections.emptyList();
     }
 
     public Product synchronizeOneDbProductWithRestApiModel(Product productForSync) throws ImpossibleEntitySaveUpdateException {
-
 
         return productService.save(productRestService.getProductById(productForSync.getId()).orElse(null));
 
     }
 
-    private List<Group> synchronizeGroups() {
 
-        return groupService.save(groupRestService.getAll());
 
-    }
-
-    private List<Product> synchronizeProducts() {
+    private List<Product> synchronizeProducts() throws InterruptedException {
 
         return productService.save(productRestService.getAll());
 
     }
 
-    public void postAllProductsFromDb() {
-        productRestService.postProducts(
-                productService.findAll());
-    }
+
 
 }

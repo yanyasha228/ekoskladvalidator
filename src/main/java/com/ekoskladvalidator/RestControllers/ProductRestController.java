@@ -1,6 +1,8 @@
 package com.ekoskladvalidator.RestControllers;
 
+import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
 import com.ekoskladvalidator.Models.Product;
+import com.ekoskladvalidator.RestServices.ProductRestService;
 import com.ekoskladvalidator.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,26 @@ public class ProductRestController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ProductRestService productRestService;
+
+
+    @PostMapping("add")
+    public void addProduct(@RequestParam Integer id) throws ImpossibleEntitySaveUpdateException {
+
+        if (id > 0) {
+            if (!productService.findById(id).isPresent()) {
+                Optional<Product> productRest = productRestService.getProductById(id);
+                if (productRest.isPresent()) {
+                    productService.save(productRest.get());
+                }
+            }
+        }
+    }
+
+
     @GetMapping("all")
-    public List<Product> productList(){
+    public List<Product> productList() {
         return productService.findAll();
     }
 

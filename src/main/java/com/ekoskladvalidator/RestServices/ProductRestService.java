@@ -10,7 +10,7 @@ public interface ProductRestService {
 
     Optional<Product> getProductById(int id);
 
-    List<Product> getAll();
+    List<Product> getAll() throws InterruptedException;
 
     List<Product> getProductsByGroupId(int id);
 
