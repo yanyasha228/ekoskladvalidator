@@ -39,7 +39,7 @@ public class ProductValidator {
     private ProductValidatorUtils priceValidatorUtils;
 
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 12000000)
     public void validateProducts(){
 
         List<Product> syncProductList = dbRestSynchronizer.synchronizeDbProductsWithRestApiModels();
