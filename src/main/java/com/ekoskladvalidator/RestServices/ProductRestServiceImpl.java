@@ -1,9 +1,6 @@
 package com.ekoskladvalidator.RestServices;
 
-import com.ekoskladvalidator.Dao.GroupDao;
-import com.ekoskladvalidator.Models.DTO.GroupDto;
 import com.ekoskladvalidator.Models.DTO.ProductDto;
-import com.ekoskladvalidator.Models.Group;
 import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.ObjectMappers.ProductMapper;
 import com.ekoskladvalidator.RestDao.GroupRestDao;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,11 +65,23 @@ public class ProductRestServiceImpl implements ProductRestService {
     }
 
     @Override
-    public List<Product> postProducts(List<Product> productList) {
+    public List<Product> postProducts(List<Product> productList) throws InterruptedException {
 
-        return  productRestDao.postProducts(productList.stream().
-                map(product -> productMapper.toDto(product))
-                .collect(Collectors.toList())).stream().
-                map(productDto -> productMapper.toEntity(productDto)).collect(Collectors.toList());
+        List<Product> productListForRet = new ArrayList<>();
+
+        for (Product pr: productList) {
+            List<Product> productsForDescSend = new ArrayList<>();
+            productsForDescSend.add(pr);
+
+            productListForRet.addAll(productRestDao.postProducts(productsForDescSend.stream()
+                    .map(product -> productMapper.toDto(product))
+                    .collect(Collectors.toList())).stream().
+                    map(productDto -> productMapper.toEntity(productDto)).collect(Collectors.toList()));
+
+            Thread.sleep(70);
+
+        }
+
+        return  productListForRet;
     }
 }

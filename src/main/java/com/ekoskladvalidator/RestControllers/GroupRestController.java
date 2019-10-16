@@ -3,7 +3,6 @@ package com.ekoskladvalidator.RestControllers;
 import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
 import com.ekoskladvalidator.Models.Group;
 import com.ekoskladvalidator.Models.Product;
-import com.ekoskladvalidator.RestDao.ProductRestDao;
 import com.ekoskladvalidator.RestServices.ProductRestService;
 import com.ekoskladvalidator.Services.GroupService;
 import com.ekoskladvalidator.Services.ProductService;

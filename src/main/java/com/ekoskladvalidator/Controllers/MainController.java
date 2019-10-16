@@ -1,6 +1,9 @@
 package com.ekoskladvalidator.Controllers;
 
 
+import com.ekoskladvalidator.ObjectMappers.ProductMapper;
+import com.ekoskladvalidator.RestServices.ProductRestService;
+import com.ekoskladvalidator.Services.ProductService;
 import com.ekoskladvalidator.Validators.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,15 @@ public class MainController {
     @Autowired
     private ProductValidator productValidator;
 
+    @Autowired
+    private ProductRestService productRestService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductMapper productMapper;
+
     @RequestMapping
     public String mainPage(Model model) {
 
@@ -23,13 +35,14 @@ public class MainController {
     }
 
     @GetMapping("sync")
-    public String sync(Model model) {
+    public String sync(Model model) throws InterruptedException {
 
         productValidator.validateProducts();
 
         return "redirect:/products";
 
     }
+
 
     @GetMapping("login")
     public String loginPage() {

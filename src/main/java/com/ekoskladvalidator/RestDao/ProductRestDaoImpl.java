@@ -10,7 +10,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.util.*;
 
 @Component
@@ -81,7 +80,7 @@ public class ProductRestDaoImpl implements ProductRestDao {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", String.format("Bearer %s", apiToken));
 
-        HttpEntity<List<com.ekoskladvalidator.Models.DTO.ProductDto>> entity = new HttpEntity<List<ProductDto>>(productDtos, headers);
+        HttpEntity<List<ProductDto>> entity = new HttpEntity<List<ProductDto>>(productDtos, headers);
 
         ResponseEntity<EditProductsResponse> productsEditResponseEntity = restTemplate.exchange(postProductsEditUri, HttpMethod.POST, entity, EditProductsResponse.class);
 

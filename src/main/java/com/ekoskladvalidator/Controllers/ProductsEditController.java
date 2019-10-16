@@ -50,7 +50,7 @@ public class ProductsEditController {
 
 
             productValidator.validateOne(productService.save(appropriateProductFromDB));
-        } catch (ImpossibleEntitySaveUpdateException e) {
+        } catch (ImpossibleEntitySaveUpdateException | InterruptedException e) {
             logger.warn(e);
         }
 

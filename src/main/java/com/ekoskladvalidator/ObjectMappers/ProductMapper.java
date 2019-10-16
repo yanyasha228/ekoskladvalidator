@@ -37,8 +37,8 @@ public class ProductMapper {
     }
 
 
-    public com.ekoskladvalidator.Models.DTO.ProductDto toDto(Product product) {
-        return Objects.isNull(product) ? null : mapper.map(product, com.ekoskladvalidator.Models.DTO.ProductDto.class);
+    public ProductDto toDto(Product product) {
+        return Objects.isNull(product) ? null : mapper.map(product, ProductDto.class);
     }
 
 

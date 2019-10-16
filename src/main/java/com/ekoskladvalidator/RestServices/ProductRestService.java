@@ -14,7 +14,7 @@ public interface ProductRestService {
 
     List<Product> getProductsByGroupId(int id);
 
-    List<Product> postProducts(List<Product> productList);
+    List<Product> postProducts(List<Product> productList) throws InterruptedException;
 
 
 }

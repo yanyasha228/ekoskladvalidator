@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
             out:
             for (Product prodForSearch : firstWordSearchFromDb) {
                 for (int i = 1; i < searchingWords.length; i++) {
-                    if (!prodForSearch.getName().toLowerCase().contains(searchingWords[i])) continue out;
+                    if (!prodForSearch.getName().toLowerCase().contains(searchingWords[i].toLowerCase())) continue out;
                 }
                 productsThatMatch.add(prodForSearch);
             }

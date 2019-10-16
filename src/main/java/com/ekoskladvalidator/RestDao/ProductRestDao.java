@@ -1,7 +1,6 @@
 package com.ekoskladvalidator.RestDao;
 
 import com.ekoskladvalidator.Models.DTO.ProductDto;
-import com.ekoskladvalidator.Models.HelpRestModels.EditProductsResponse;
 
 import java.util.List;
 import java.util.Optional;

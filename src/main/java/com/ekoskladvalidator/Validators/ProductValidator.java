@@ -40,7 +40,7 @@ public class ProductValidator {
 
 
     @Scheduled(fixedDelay = 12000000)
-    public void validateProducts(){
+    public void validateProducts() throws InterruptedException {
 
         List<Product> syncProductList = dbRestSynchronizer.synchronizeDbProductsWithRestApiModels();
 
@@ -94,13 +94,12 @@ public class ProductValidator {
 
         productService.save(productListForExSave);
 
-
         productRestService.postProducts(productService.save(productListForValidation));
 
 
     }
 
-    public List<Product> validateOne(Product product) throws ImpossibleEntitySaveUpdateException {
+    public List<Product> validateOne(Product product) throws ImpossibleEntitySaveUpdateException, InterruptedException {
 
         Product syncedProduct;
 
