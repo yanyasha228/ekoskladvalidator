@@ -1,5 +1,6 @@
 package com.ekoskladvalidator.Validators;
 
+
 import com.ekoskladvalidator.CustomExceptions.ImpossibleEntitySaveUpdateException;
 import com.ekoskladvalidator.Models.Product;
 import com.ekoskladvalidator.ParseUtils.CssQueryParser;
@@ -8,6 +9,8 @@ import com.ekoskladvalidator.Services.ProductService;
 import com.ekoskladvalidator.SyncUtils.DbRestSynchronizer;
 import com.ekoskladvalidator.Validators.ValidatorUtils.ProductValidatorUtils;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class ProductValidator {
 
+    private static Logger logger = LoggerFactory.getLogger(ProductValidator.class);
 
     @Autowired
     private ProductService productService;
@@ -56,7 +60,7 @@ public class ProductValidator {
                         }
                     }
 
-                    if(!product.isDataForValidatingExist()) ndToAdd = true;
+                    if (!product.isDataForValidatingExist()) ndToAdd = true;
 
                     return ndToAdd;
                 }).
@@ -92,9 +96,17 @@ public class ProductValidator {
         }
 
 
-        productService.save(productListForExSave);
+        List<Product> productsThatHadntBeenValidatedAfterSaving = productService.save(productListForExSave);
 
-        productRestService.postProducts(productService.save(productListForValidation));
+        List<Product> productThatShouldBeValidatingAfterSaving = productService.save(productListForValidation);
+
+        List<Product> productThatHaveBeenValidated = productRestService.postProducts(productThatShouldBeValidatingAfterSaving);
+
+        logger.error("Products that should not have been validated ammount : " + productListForExSave.size());
+        logger.error("Products that should not have been validated after saving ammount : " + productsThatHadntBeenValidatedAfterSaving.size());
+        logger.error("Products that should have been validated ammount :" + productListForValidation.size());
+        logger.error("Products that should have been validated after saving ammount :" + productThatShouldBeValidatingAfterSaving.size());
+        logger.error("Products that have been validated ammount :" + productThatHaveBeenValidated.size());
 
 
     }
@@ -105,11 +117,11 @@ public class ProductValidator {
 
         try {
             syncedProduct = dbRestSynchronizer.synchronizeOneDbProductWithRestApiModel(product);
-        }catch (ImpossibleEntitySaveUpdateException e){
+        } catch (ImpossibleEntitySaveUpdateException e) {
             return Collections.emptyList();
         }
 
-        if(product.isDataForValidatingExist()){
+        if (product.isDataForValidatingExist()) {
             Optional<Float> newPrice = priceValidatorUtils.getValidPriceByCssQuery(syncedProduct.getUrlForValidating(),
                     syncedProduct.getCssQueryForValidating());
 
@@ -117,9 +129,9 @@ public class ProductValidator {
                 syncedProduct.setPrice(newPrice.get());
                 syncedProduct.setValidationStatus(true);
                 syncedProduct.updateLastValidationDate();
-            }else syncedProduct.setValidationStatus(false);
+            } else syncedProduct.setValidationStatus(false);
 
-        }else syncedProduct.setValidationStatus(false);
+        } else syncedProduct.setValidationStatus(false);
 
         List<Product> prodListForVal = new ArrayList<>();
 
