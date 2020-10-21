@@ -50,7 +50,7 @@ public class ProductRestServiceImpl implements ProductRestService {
 
             prodToAdd.ifPresent(productDto -> productList.add(productMapper.toEntity(productDto)));
 
-            Thread.sleep(70);
+            Thread.sleep(150);
 
         }
 
@@ -78,7 +78,7 @@ public class ProductRestServiceImpl implements ProductRestService {
                     .collect(Collectors.toList())).stream().
                     map(productDto -> productMapper.toEntity(productDto)).collect(Collectors.toList()));
 
-            Thread.sleep(70);
+            Thread.sleep(150);
 
         }
 
